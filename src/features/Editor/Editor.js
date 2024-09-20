@@ -117,6 +117,7 @@ function Editor(props) {
       </div>
     </div>
   );
+
   const projectBody = (
     <div className={styles.detail}>
       <div className={styles.row}>
@@ -180,6 +181,7 @@ function Editor(props) {
       </div>
     </div>
   );
+
   const educationBody = (
     <div className={styles.detail}>
       <div className={styles.row}>
@@ -222,6 +224,7 @@ function Editor(props) {
       </div>
     </div>
   );
+
   const basicInfoBody = (
     <div className={styles.detail}>
       <div className={styles.row}>
@@ -280,375 +283,72 @@ function Editor(props) {
       </div>
     </div>
   );
+
   const achievementsBody = (
     <div className={styles.detail}>
       <div className={styles.column}>
         <label>List your achievements</label>
         <InputControl
-          placeholder="Line 1"
-          value={values.points ? values.points[0] : ""}
-          onChange={(event) => handlePointUpdate(event.target.value, 0)}
+          placeholder="Achievement 1"
+          value={values.achievements ? values.achievements[0] : ""}
+          onChange={(event) =>
+            setValues((prev) => {
+              const newAchievements = [...(prev.achievements || [])];
+              newAchievements[0] = event.target.value;
+              return { ...prev, achievements: newAchievements };
+            })
+          }
         />
         <InputControl
-          placeholder="Line 2"
-          value={values.points ? values.points[1] : ""}
-          onChange={(event) => handlePointUpdate(event.target.value, 1)}
-        />
-        <InputControl
-          placeholder="Line 3"
-          value={values.points ? values.points[2] : ""}
-          onChange={(event) => handlePointUpdate(event.target.value, 2)}
-        />
-        <InputControl
-          placeholder="Line 4"
-          value={values.points ? values.points[3] : ""}
-          onChange={(event) => handlePointUpdate(event.target.value, 3)}
+          placeholder="Achievement 2"
+          value={values.achievements ? values.achievements[1] : ""}
+          onChange={(event) =>
+            setValues((prev) => {
+              const newAchievements = [...(prev.achievements || [])];
+              newAchievements[1] = event.target.value;
+              return { ...prev, achievements: newAchievements };
+            })
+          }
         />
       </div>
     </div>
   );
-  const summaryBody = (
-    <div className={styles.detail}>
-      <InputControl
-        label="Summary"
-        value={values.summary}
-        placeholder="Enter your objective/summary"
-        onChange={(event) =>
-          setValues((prev) => ({ ...prev, summary: event.target.value }))
-        }
-      />
-    </div>
-  );
-  const otherBody = (
-    <div className={styles.detail}>
-      <InputControl
-        label="Other"
-        value={values.other}
-        placeholder="Enter something"
-        onChange={(event) =>
-          setValues((prev) => ({ ...prev, other: event.target.value }))
-        }
-      />
-    </div>
-  );
-
-  const generateBody = () => {
-    switch (sections[activeSectionKey]) {
-      case sections.basicInfo:
-        return basicInfoBody;
-      case sections.workExp:
-        return workExpBody;
-      case sections.project:
-        return projectBody;
-      case sections.education:
-        return educationBody;
-      case sections.achievement:
-        return achievementsBody;
-      case sections.summary:
-        return summaryBody;
-      case sections.other:
-        return otherBody;
-      default:
-        return null;
-    }
-  };
-
-  const handleSubmission = () => {
-    switch (sections[activeSectionKey]) {
-      case sections.basicInfo: {
-        const tempDetail = {
-          name: values.name,
-          title: values.title,
-          linkedin: values.linkedin,
-          github: values.github,
-          email: values.email,
-          phone: values.phone,
-        };
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.basicInfo]: {
-            ...prev[sections.basicInfo],
-            detail: tempDetail,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.workExp: {
-        const tempDetail = {
-          certificationLink: values.certificationLink,
-          title: values.title,
-          startDate: values.startDate,
-          endDate: values.endDate,
-          companyName: values.companyName,
-          location: values.location,
-          points: values.points,
-        };
-        const tempDetails = [...information[sections.workExp]?.details];
-        tempDetails[activeDetailIndex] = tempDetail;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.workExp]: {
-            ...prev[sections.workExp],
-            details: tempDetails,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.project: {
-        const tempDetail = {
-          link: values.link,
-          title: values.title,
-          overview: values.overview,
-          github: values.github,
-          points: values.points,
-        };
-        const tempDetails = [...information[sections.project]?.details];
-        tempDetails[activeDetailIndex] = tempDetail;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.project]: {
-            ...prev[sections.project],
-            details: tempDetails,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.education: {
-        const tempDetail = {
-          title: values.title,
-          college: values.college,
-          startDate: values.startDate,
-          endDate: values.endDate,
-        };
-        const tempDetails = [...information[sections.education]?.details];
-        tempDetails[activeDetailIndex] = tempDetail;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.education]: {
-            ...prev[sections.education],
-            details: tempDetails,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.achievement: {
-        const tempPoints = values.points;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.achievement]: {
-            ...prev[sections.achievement],
-            points: tempPoints,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.summary: {
-        const tempDetail = values.summary;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.summary]: {
-            ...prev[sections.summary],
-            detail: tempDetail,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-      case sections.other: {
-        const tempDetail = values.other;
-
-        props.setInformation((prev) => ({
-          ...prev,
-          [sections.other]: {
-            ...prev[sections.other],
-            detail: tempDetail,
-            sectionTitle,
-          },
-        }));
-        break;
-      }
-    }
-  };
-
-  const handleAddNew = () => {
-    const details = activeInformation?.details;
-    if (!details) return;
-    const lastDetail = details.slice(-1)[0];
-    if (!Object.keys(lastDetail).length) return;
-    details?.push({});
-
-    props.setInformation((prev) => ({
-      ...prev,
-      [sections[activeSectionKey]]: {
-        ...information[sections[activeSectionKey]],
-        details: details,
-      },
-    }));
-    setActiveDetailIndex(details?.length - 1);
-  };
-
-  const handleDeleteDetail = (index) => {
-    const details = activeInformation?.details
-      ? [...activeInformation?.details]
-      : "";
-    if (!details) return;
-    details.splice(index, 1);
-    props.setInformation((prev) => ({
-      ...prev,
-      [sections[activeSectionKey]]: {
-        ...information[sections[activeSectionKey]],
-        details: details,
-      },
-    }));
-
-    setActiveDetailIndex((prev) => (prev === index ? 0 : prev - 1));
-  };
 
   useEffect(() => {
-    const activeInfo = information[sections[activeSectionKey]];
-    setActiveInformation(activeInfo);
-    setSectionTitle(sections[activeSectionKey]);
-    setActiveDetailIndex(0);
+    setActiveInformation(information[activeSectionKey]);
     setValues({
-      name: activeInfo?.detail?.name || "",
-      overview: activeInfo?.details
-        ? activeInfo.details[0]?.overview || ""
-        : "",
-      link: activeInfo?.details ? activeInfo.details[0]?.link || "" : "",
-      certificationLink: activeInfo?.details
-        ? activeInfo.details[0]?.certificationLink || ""
-        : "",
-      companyName: activeInfo?.details
-        ? activeInfo.details[0]?.companyName || ""
-        : "",
-      college: activeInfo?.details
-        ? activeInfo.details[0]?.college || ""
-        : "",
-      location: activeInfo?.details
-        ? activeInfo.details[0]?.location || ""
-        : "",
-      startDate: activeInfo?.details
-        ? activeInfo.details[0]?.startDate || ""
-        : "",
-      endDate: activeInfo?.details ? activeInfo.details[0]?.endDate || "" : "",
-      points: activeInfo?.details
-        ? activeInfo.details[0]?.points
-          ? [...activeInfo.details[0]?.points]
-          : ""
-        : activeInfo?.points
-        ? [...activeInfo.points]
-        : "",
-      title: activeInfo?.details
-        ? activeInfo.details[0]?.title || ""
-        : activeInfo?.detail?.title || "",
-      linkedin: activeInfo?.detail?.linkedin || "",
-      github: activeInfo?.details
-        ? activeInfo.details[0]?.github || ""
-        : activeInfo?.detail?.github || "",
-      phone: activeInfo?.detail?.phone || "",
-      email: activeInfo?.detail?.email || "",
-      summary: typeof activeInfo?.detail !== "object" ? activeInfo.detail : "",
-      other: typeof activeInfo?.detail !== "object" ? activeInfo.detail : "",
+      name: activeInformation?.detail?.name || "",
+      title: activeInformation?.detail?.title || "",
+      linkedin: activeInformation?.detail?.linkedin || "",
+      github: activeInformation?.detail?.github || "",
+      phone: activeInformation?.detail?.phone || "",
+      email: activeInformation?.detail?.email || "",
     });
   }, [activeSectionKey]);
 
-  useEffect(() => {
-    setActiveInformation(information[sections[activeSectionKey]]);
-  }, [information]);
-
-  useEffect(() => {
-    const details = activeInformation?.details;
-    if (!details) return;
-
-    const activeInfo = information[sections[activeSectionKey]];
-    setValues({
-      overview: activeInfo.details[activeDetailIndex]?.overview || "",
-      link: activeInfo.details[activeDetailIndex]?.link || "",
-      certificationLink:
-        activeInfo.details[activeDetailIndex]?.certificationLink || "",
-      companyName: activeInfo.details[activeDetailIndex]?.companyName || "",
-      location: activeInfo.details[activeDetailIndex]?.location || "",
-      startDate: activeInfo.details[activeDetailIndex]?.startDate || "",
-      endDate: activeInfo.details[activeDetailIndex]?.endDate || "",
-      points: activeInfo.details[activeDetailIndex]?.points || "",
-      title: activeInfo.details[activeDetailIndex]?.title || "",
-      linkedin: activeInfo.details[activeDetailIndex]?.linkedin || "",
-      github: activeInfo.details[activeDetailIndex]?.github || "",
-      college: activeInfo.details[activeDetailIndex]?.college || "",
-    });
-  }, [activeDetailIndex]);
-
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        {Object.keys(sections)?.map((key) => (
-          <div
-            className={`${styles.section} ${
-              activeSectionKey === key ? styles.active : ""
-            }`}
+      <div className={styles.nav}>
+        {Object.keys(sections).map((key) => (
+          <button
             key={key}
             onClick={() => setActiveSectionKey(key)}
+            className={activeSectionKey === key ? styles.active : ""}
           >
             {sections[key]}
-          </div>
+          </button>
         ))}
       </div>
-
-      <div className={styles.body}>
-        <InputControl
-          label="Title"
-          placeholder="Enter section title"
-          value={sectionTitle}
-          onChange={(event) => setSectionTitle(event.target.value)}
-        />
-
-        <div className={styles.chips}>
-          {activeInformation?.details
-            ? activeInformation?.details?.map((item, index) => (
-                <div
-                  className={`${styles.chip} ${
-                    activeDetailIndex === index ? styles.active : ""
-                  }`}
-                  key={item.title + index}
-                  onClick={() => setActiveDetailIndex(index)}
-                >
-                  <p>
-                    {sections[activeSectionKey]} {index + 1}
-                  </p>
-                  <X
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleDeleteDetail(index);
-                    }}
-                  />
-                </div>
-              ))
-            : ""}
-          {activeInformation?.details &&
-          activeInformation?.details?.length > 0 ? (
-            <div className={styles.new} onClick={handleAddNew}>
-              +New
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-
-        {generateBody()}
-
-        <button onClick={handleSubmission}>Save</button>
+      <div className={styles.editorContainer}>
+        {activeSectionKey === "workExperience" && workExpBody}
+        {activeSectionKey === "projects" && projectBody}
+        {activeSectionKey === "education" && educationBody}
+        {activeSectionKey === "basicInfo" && basicInfoBody}
+        {activeSectionKey === "achievements" && achievementsBody}
       </div>
+      <button onClick={props.onSave} className={styles.saveButton}>
+        Save
+      </button>
     </div>
   );
 }

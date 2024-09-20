@@ -80,7 +80,7 @@ const Resume = forwardRef((props, ref) => {
               )}
               {item.location ? (
                 <p className={styles.date}>
-                  <MapPin /> {(item.location)}
+                  <MapPin /> {item.location}
                 </p>
               ) : (
                 <span />
@@ -279,7 +279,6 @@ const Resume = forwardRef((props, ref) => {
     const tempSource = tempColumns[sourceColumnIndex][sourceRowIndex];
     tempColumns[sourceColumnIndex][sourceRowIndex] =
       tempColumns[targetColumnIndex][targetRowIndex];
-
     tempColumns[targetColumnIndex][targetRowIndex] = tempSource;
 
     setColumns(tempColumns);
@@ -287,8 +286,13 @@ const Resume = forwardRef((props, ref) => {
 
   useEffect(() => {
     setColumns([
-      [sections.project, sections.education, sections.summary],
-      [sections.workExp, sections.achievement, sections.other],
+      [sections.workExp, sections.project],
+      [
+        sections.education,
+        sections.achievement,
+        sections.summary,
+        sections.other,
+      ],
     ]);
   }, []);
 
@@ -300,7 +304,9 @@ const Resume = forwardRef((props, ref) => {
     const container = containerRef.current;
     if (!props.activeColor || !container) return;
 
-    container.style.setProperty("--color", props.activeColor);
+    setTimeout(() => {
+      container.style.setProperty("--color", props.activeColor);
+    }, 100);
   }, [props.activeColor]);
 
   return (
@@ -309,7 +315,6 @@ const Resume = forwardRef((props, ref) => {
         <div className={styles.header}>
           <p className={styles.heading}>{info.basicInfo?.detail?.name}</p>
           <p className={styles.subHeading}>{info.basicInfo?.detail?.title}</p>
-
           <div className={styles.links}>
             {info.basicInfo?.detail?.email ? (
               <a className={styles.link} type="email">
@@ -326,16 +331,26 @@ const Resume = forwardRef((props, ref) => {
               <span />
             )}
             {info.basicInfo?.detail?.linkedin ? (
-              <a className={styles.link}>
+              <a
+                className={styles.link}
+                href={info.basicInfo?.detail?.linkedin}
+              >
                 <Linkedin /> {info.basicInfo?.detail?.linkedin}
               </a>
             ) : (
               <span />
             )}
             {info.basicInfo?.detail?.github ? (
-              <a className={styles.link}>
+              <a className={styles.link} href={info.basicInfo?.detail?.github}>
                 <GitHub /> {info.basicInfo?.detail?.github}
               </a>
+            ) : (
+              <span />
+            )}
+            {info.basicInfo?.detail?.address ? (
+              <p className={styles.link}>
+                <MapPin /> {info.basicInfo?.detail?.address}
+              </p>
             ) : (
               <span />
             )}
